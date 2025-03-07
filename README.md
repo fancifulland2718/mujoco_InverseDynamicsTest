@@ -1,24 +1,9 @@
-<h1>
-  <a href="#"><img alt="MuJoCo" src="banner.png" width="100%"/></a>
-</h1>
 
-<p>
-  <a href="https://github.com/google-deepmind/mujoco/actions/workflows/build.yml?query=branch%3Amain" alt="GitHub Actions">
-    <img src="https://img.shields.io/github/actions/workflow/status/google-deepmind/mujoco/build.yml?branch=main">
-  </a>
-  <a href="https://mujoco.readthedocs.io/" alt="Documentation">
-    <img src="https://readthedocs.org/projects/mujoco/badge/?version=latest">
-  </a>
-  <a href="https://github.com/google-deepmind/mujoco/blob/main/LICENSE" alt="License">
-    <img src="https://img.shields.io/github/license/google-deepmind/mujoco">
-  </a>
-</p>
+这是笔者为了调试mujoco逆向动力学管线，对3.3.1版本的mujoco项目源码进行部分修改得到的，希望能给有需要的人参考，欢迎交流。
 
-**MuJoCo** stands for **Mu**lti-**Jo**int dynamics with **Co**ntact. It is a
-general purpose physics engine that aims to facilitate research and development
-in robotics, biomechanics, graphics and animation, machine learning, and other
-areas which demand fast and accurate simulation of articulated structures
-interacting with their environment.
+主要的测试代码是inverse_test.cpp，正常使用需要在./out/build/x64-Debug/bin中添加参与测试的xml文件。
+
+以下是原项目的ReadMe内容：
 
 This repository is maintained by [Google DeepMind](https://www.deepmind.com/).
 
