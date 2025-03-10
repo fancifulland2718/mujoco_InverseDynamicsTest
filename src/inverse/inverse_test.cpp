@@ -9,7 +9,7 @@
 
 int main() {
     std::array<char, 1024> error;
-    mjModel* model = mj_loadXML("car.xml", nullptr, error.data(), error.size());
+    mjModel* model = mj_loadXML("test.xml", nullptr, error.data(), error.size());
     if (!model) {
         std::cerr << "Model loading error: " << error.data() << std::endl;
         return 1;
@@ -58,9 +58,6 @@ int main() {
         std::copy(xfrc_force, xfrc_force + nbody * 6, data->xfrc_applied);
         std::copy(qfrc_actuator, qfrc_actuator + nv, data->qfrc_actuator);
 
-        // 避免 nefc 非常量导致的错误
-        // mj_step(model, data);
-
         // ---------- 正向计算阶段 ----------
 
         mj_checkPos(model, data);
@@ -73,15 +70,21 @@ int main() {
         
         // 计算预期力，确保和逆向动力学得到的表达式完全一致
         mju_add(expected_force, data->qfrc_applied, data->qfrc_actuator, nv);
+        mj_xfrcAccumulate(model, data, expected_force);
+
         // 下面的代码等效于函数 mj_xfrcAccumulate(model, data, expected_force)
-        // 不调用是为了避免 LNK1120 和 LNK2019 发生
-        for (int j = 1; j < model->nbody; j++) {
-            if (!mju_isZero(data->xfrc_applied + 6 * j, 6)) {
-                mj_applyFT(model, data, data->xfrc_applied + 6 * j, 
-                    data->xfrc_applied + 6 * j + 3, data->xipos + 3 * j, j, expected_force);
-            }
-        }
-        // 这个内存分配必须注意位置，否则可能因为约束在前向计算种发生变化导致错误
+        // 不直接调用是为了避免 LNK1120 和 LNK2019 发生
+        // 测试发现，只要将调用的函数在声明时前缀 MJAPI ，并且在 mujoco.h 中添加定义即可
+        // 这种方法应当可以应用于自己新定义的任何函数
+        //for (int j = 1; j < model->nbody; j++) {
+        //    if (!mju_isZero(data->xfrc_applied + 6 * j, 6)) {
+        //        mj_applyFT(model, data, data->xfrc_applied + 6 * j, 
+        //            data->xfrc_applied + 6 * j + 3, data->xipos + 3 * j, j, expected_force);
+        //    }
+        //}
+        
+        // 两个注意点，一个是 nefc 不能实现定义，避免 nefc 非常量导致的错误
+        // 一个是内存分配必须注意位置，否则可能因为约束在前向计算种发生变化导致错误
         mjtNum* save_efc_force = static_cast<mjtNum*>(malloc(sizeof(mjtNum) * data->nefc));
 
         mju_copy(save_qfrc_constraint, data->qfrc_constraint, nv);
@@ -122,6 +125,8 @@ int main() {
 
     // 资源释放
     delete[] applied_force;
+    delete[] xfrc_force;
+    delete[] qfrc_actuator;
     mj_deleteData(data);
     mj_deleteModel(model);
     return 0;

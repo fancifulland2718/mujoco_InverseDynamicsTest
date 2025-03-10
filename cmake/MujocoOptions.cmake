@@ -141,8 +141,4 @@ if(WIN32)
                   -D_CRT_SECURE_NO_DEPRECATE  # 禁用CRT弃用警告
   )
 endif()
-# ======================== Debug模式定义补正 ========================
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-  add_compile_options(-g3 -ggdb)
-endif()
 

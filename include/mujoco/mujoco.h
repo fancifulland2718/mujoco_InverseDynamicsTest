@@ -1730,6 +1730,11 @@ extern "C" {
     // Safely cast an element as mjsPlugin, or return NULL if the element is not an mjsPlugin.
     MJAPI mjsPlugin* mjs_asPlugin(mjsElement* element);
 
+
+    //---------------------------------- 额外添加接口 -------------------------------------------------
+    // 计算外部扭矩对广义力的累积
+    MJAPI void mj_xfrcAccumulate(const mjModel* m, mjData* d, mjtNum* qfrc);
+
 #ifdef __cplusplus
 }
 #endif

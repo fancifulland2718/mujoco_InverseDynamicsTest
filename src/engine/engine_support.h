@@ -152,7 +152,7 @@ MJAPI void mj_applyFT(const mjModel* m, mjData* d,
                       const mjtNum point[3], int body, mjtNum* qfrc_target);
 
 // accumulate xfrc_applied in qfrc
-void mj_xfrcAccumulate(const mjModel* m, mjData* d, mjtNum* qfrc);
+MJAPI void mj_xfrcAccumulate(const mjModel* m, mjData* d, mjtNum* qfrc);
 
 
 //-------------------------- coordinate transformation ---------------------------------------------

@@ -43,6 +43,7 @@
 #include "engine/engine_util_sparse.h"
 #include "thread/thread_pool.h"
 #include "thread/thread_task.h"
+#include "engine/engine_test.h"
 
 
 
@@ -1122,7 +1123,8 @@ void mj_forwardSkip(const mjModel* m, mjData* d, int skipstage, int skipsensor) 
 
 // forward dynamics
 void mj_forward(const mjModel* m, mjData* d) {
-    // 不跳过任何计算阶段
+  // 不跳过任何计算阶段
+  //engine_test_scai();
   mj_forwardSkip(m, d, mjSTAGE_NONE, 0);
 }
 
